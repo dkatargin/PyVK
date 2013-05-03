@@ -30,4 +30,5 @@ def browser():
     win.show_all()
     gtk.main()
     locuri = URI
+    win.destroy()
     return locuri
