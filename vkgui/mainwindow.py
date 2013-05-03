@@ -3,6 +3,7 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
+import datetime
 
 # Объявление своего класса, без наследования
 # от какого-либо другого.
@@ -41,6 +42,8 @@ class Timeline:
 
         notebook.append_page(self.userprofile_tab(),gtk.Label('Я'))
         notebook.append_page(self.audio_tab(),gtk.Label('Музыка'))
+        notebook.append_page(self.friends_tab(),gtk.Label('Друзья'))
+        notebook.append_page(self.notify_tab(),gtk.Label('Уведомления'))
 
         self.button_exit = gtk.Button("Выход")
         self.button_exit.connect("clicked", self.hello)
@@ -88,6 +91,43 @@ class Timeline:
         textview.show()
         for songinfo in self.audio:
             tb += '%s-%s(Url:%s)\n' % (songinfo['artist'],songinfo['title'],songinfo['url'])
+        textbuffer.set_text(tb)
+        return sw
+
+    def friends_tab(self):
+        tb = ''
+        sw = gtk.ScrolledWindow()
+        sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        textview = gtk.TextView()
+        textbuffer = textview.get_buffer()
+        sw.add(textview)
+        sw.show()
+        textview.show()
+        for friend in self.friends:
+            tb += '%s %s\n' % (friend['first_name'], friend['last_name'])
+        textbuffer.set_text(tb)
+        return sw
+
+    def notify_tab(self):
+        tb = ''
+        sw = gtk.ScrolledWindow()
+        sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        textview = gtk.TextView()
+        textbuffer = textview.get_buffer()
+        sw.add(textview)
+        sw.show()
+        textview.show()
+        for i in self.notify['items'][1:]:
+            dateevent = datetime.datetime.fromtimestamp(int(i['date'])).strftime('%Y-%m-%d %H:%M:%S')
+            print i
+            #print dateevent
+            if 'reply' in i.keys():
+                reply_info = i['reply']
+                #print datetime.datetime.fromtimestamp(int(reply_info['date'])).strftime('%Y-%m-%d %H:%M:%S')
+                print reply_info['text']
+            elif 'type' in i.keys():
+                if i['type'] == 'reply_comment':
+                    print i['feedback']['text']
         textbuffer.set_text(tb)
         return sw
 

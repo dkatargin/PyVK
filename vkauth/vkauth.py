@@ -20,6 +20,7 @@ class WebV(webkit.WebView):
 def browser():
     gobject.threads_init()
     win = gtk.Window()
+    win.set_position(gtk.WIN_POS_CENTER)
     bro = WebV()
     scope = ['friends','audio','video','offline','status','wall','notifications','messages']
     bro.open("http://oauth.vk.com/oauth/authorize?" + \
